@@ -6,6 +6,7 @@ import "dotenv/config";
 const app = express();
 const port = process.env.PORT || 3000;
 const apiKey = process.env.OPENAI_API_KEY;
+const baseUrl = process.env.OPENAI_BASE_URL;
 
 // Configure Vite middleware for React client
 const vite = await createViteServer({
@@ -18,7 +19,7 @@ app.use(vite.middlewares);
 app.get("/token", async (req, res) => {
   try {
     const response = await fetch(
-      "https://api.openai.com/v1/realtime/sessions",
+      `${baseUrl}/v1/realtime/sessions`,
       {
         method: "POST",
         headers: {
@@ -51,7 +52,10 @@ app.use("*", async (req, res, next) => {
     );
     const { render } = await vite.ssrLoadModule("./client/entry-server.jsx");
     const appHtml = await render(url);
-    const html = template.replace(`<!--ssr-outlet-->`, appHtml?.html);
+    const html = template
+      .replace(`<!--ssr-outlet-->`, appHtml?.html)
+      .replace('id="base-url"', `id="base-url" data-base-url="${baseUrl}"`);
+
     res.status(200).set({ "Content-Type": "text/html" }).end(html);
   } catch (e) {
     vite.ssrFixStacktrace(e);
