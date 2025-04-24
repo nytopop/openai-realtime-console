@@ -85,7 +85,7 @@ export default function App() {
   function sendClientEvent(message) {
     if (dataChannel) {
       const timestamp = new Date().toLocaleTimeString();
-      message.event_id = message.event_id || crypto.randomUUID();
+      message.event_id = message.event_id || "client_" + crypto.randomUUID();
 
       // send event before setting timestamp since the backend peer doesn't expect this field
       dataChannel.send(JSON.stringify(message));
