@@ -94,7 +94,7 @@ export default function App() {
       if (!message.timestamp) {
         message.timestamp = timestamp;
       }
-      setEvents((prev) => [...prev, message]);
+      setEvents((prev) => [message, ...prev]);
     } else {
       console.error(
         "Failed to send message - no data channel available",
@@ -133,7 +133,7 @@ export default function App() {
           event.timestamp = new Date().toLocaleTimeString();
         }
 
-        setEvents((prev) => [...prev, event]);
+        setEvents((prev) => [event, ...prev]);
       });
 
       // Set session active when the data channel is opened
